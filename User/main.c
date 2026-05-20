@@ -47,7 +47,7 @@ float AngDerivFilt = 0;
 #define DIST_TARGET_MIN      50.0f   // 目标距离下限(mm)
 #define DIST_TARGET_MAX      400.0f  // 目标距离上限(mm)
 
-volatile float DistKp        = 0.55f;
+volatile float DistKp        = 0.12f;
 volatile float DistKi        = 0.018f;
 volatile float DistKd        = 0.40f;
 volatile float DistTarget    = DIST_TARGET_DEFAULT;
@@ -243,8 +243,8 @@ void TIM4_IRQHandler(void)
 					if (Out > 0) Out += AngBias;
 					else if (Out < 0) Out -= AngBias;
 
-					// 最小PWM：误差>0.5脉冲但输出太小时，强制给AngMinPWM推力克服静摩擦
-					if (fabs(AngError0) > 0.5f)
+					// 最小PWM：误差>2脉冲但输出太小时，强制给AngMinPWM推力克服静摩擦
+					if (fabs(AngError0) > 2.0f)
 					{
 						if (Out > 0 && Out < AngMinPWM) Out = AngMinPWM;
 						else if (Out < 0 && Out > -AngMinPWM) Out = -AngMinPWM;
