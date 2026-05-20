@@ -35,6 +35,7 @@ volatile float AngKd        = 1.2f;
 volatile float AngDeadzone  = 0.3f;
 volatile float AngBias      = 18.0f;
 volatile float AngOutMax    = 100.0f;
+volatile float AngMinPWM    = 40.0f;   // 最小PWM，克服静摩擦
 
 float AngError0 = 0;
 float AngError1 = 0;
@@ -186,8 +187,12 @@ static void ParseSerialCommand(char *cmd)
 		val = atof(p + 3);
 		if (val >= 0 && val < 100) { AngBias = val; printf("AngBias=%.1f\r\n", AngBias); }
 	}
+	else if (strncmp(p, "MP=", 3) == 0 || strncmp(p, "mp=", 3) == 0) {
+		val = atof(p + 3);
+		if (val >= 0 && val <= 100) { AngMinPWM = val; printf("AngMinPWM=%.1f\r\n", AngMinPWM); }
+	}
 	else {
-		printf("Unknown cmd. Use: KP/KI/KD/DKP/DKI/DKD/TD/AM/AN/BZ/BI=<val>\r\n");
+		printf("Unknown cmd. Use: KP/KI/KD/DKP/DKI/DKD/TD/AM/AN/BZ/BI/MP=<val>\r\n");
 	}
 }
 
@@ -238,11 +243,11 @@ void TIM4_IRQHandler(void)
 					if (Out > 0) Out += AngBias;
 					else if (Out < 0) Out -= AngBias;
 
-					// 最小PWM：误差>0.5脉冲但输出太小时，强制给30推力克服静摩擦
+					// 最小PWM：误差>0.5脉冲但输出太小时，强制给AngMinPWM推力克服静摩擦
 					if (fabs(AngError0) > 0.5f)
 					{
-						if (Out > 0 && Out < 30) Out = 30;
-						else if (Out < 0 && Out > -30) Out = -30;
+						if (Out > 0 && Out < AngMinPWM) Out = AngMinPWM;
+						else if (Out < 0 && Out > -AngMinPWM) Out = -AngMinPWM;
 					}
 				}
 
@@ -280,7 +285,7 @@ int main(void){
 
 	// 串口提示
 	printf("=== Balance Ball PID Controller ===\r\n");
-	printf("Commands: KP/KI/KD/DKP/DKI/DKD/TD/AM/AN/BZ/BI=<val>\r\n");
+	printf("Commands: KP/KI/KD/DKP/DKI/DKD/TD/AM/AN/BZ/BI/MP=<val>\r\n");
 
 	while (1)
 	{
