@@ -1,0 +1,25 @@
+# Keil MDK 编译产物
+Objects/
+Listings/
+DebugConfig/
+
+# Keil 用户配置（窗口布局等，每人不同）
+*.uvguix.*
+*.uvoptx
+
+# VS Code 工作区
+*.code-workspace
+
+# 杂项
+keilkill.bat
+*.crf
+*.d
+*.o
+*.htm
+*.lnp
+*.sct
+*.Bak
+*.dep
+*.tra
+*.lst
+*.map
