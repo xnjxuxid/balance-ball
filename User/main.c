@@ -357,7 +357,7 @@ int main(void){
 			}
 			else
 			{
-				DistInt *= 0.95f;
+				DistInt = 0;   // 大误差时直接清零，不要慢慢衰减
 			}
 
 			TargetRaw = DistKp * DistError
