@@ -47,7 +47,7 @@ float AngDerivFilt = 0;
 #define DIST_TARGET_MIN      50.0f   // 目标距离下限(mm)
 #define DIST_TARGET_MAX      400.0f  // 目标距离上限(mm)
 
-volatile float DistKp        = 0.12f;
+volatile float DistKp        = 0.35f;
 volatile float DistKi        = 0.018f;
 volatile float DistKd        = 0.40f;
 volatile float DistTarget    = DIST_TARGET_DEFAULT;
