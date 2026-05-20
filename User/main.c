@@ -50,8 +50,8 @@ volatile float DistKp        = 0.55f;
 volatile float DistKi        = 0.018f;
 volatile float DistKd        = 0.40f;
 volatile float DistTarget    = DIST_TARGET_DEFAULT;
-volatile float AngleMaxP     = 28.0f;
-volatile float AngleMaxN     = -30.0f;
+volatile float AngleMaxP     = 80.0f;
+volatile float AngleMaxN     = -80.0f;
 
 // 滤波参数
 #define DIST_FILTER_ALPHA  0.38f
