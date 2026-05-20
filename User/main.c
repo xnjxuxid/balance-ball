@@ -237,6 +237,13 @@ void TIM4_IRQHandler(void)
 
 					if (Out > 0) Out += AngBias;
 					else if (Out < 0) Out -= AngBias;
+
+					// 最小PWM：误差>1脉冲但输出太小时，强制给30推力克服静摩擦
+					if (fabs(AngError0) > 1.0f)
+					{
+						if (Out > 0 && Out < 30) Out = 30;
+						else if (Out < 0 && Out > -30) Out = -30;
+					}
 				}
 
 				if (Out >  AngOutMax) Out =  AngOutMax;
