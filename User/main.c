@@ -42,7 +42,9 @@ float AngErrorInt = 0;
 float AngDerivFilt = 0;
 
 // ========== 距离→角度 PID（外环：激光距离→目标角度）==========
-#define DIST_TARGET_DEFAULT  220.0f  // 默认目标距离(mm)
+#define DIST_TARGET_DEFAULT  180.0f  // 默认目标距离(mm)
+#define DIST_TARGET_MIN      50.0f   // 目标距离下限(mm)
+#define DIST_TARGET_MAX      400.0f  // 目标距离上限(mm)
 
 volatile float DistKp        = 0.55f;
 volatile float DistKi        = 0.018f;
@@ -351,11 +353,17 @@ int main(void){
 			Target = TargetSmooth;
 		}
 
-		// ======== 5. 按键功能 ========
+		// ======== 5. 按键功能：调节目标距离 ========
 		KeyNum = Key_GetNum();
+		if (KeyNum == 1) {
+			DistTarget -= 10.0f;
+			if (DistTarget < DIST_TARGET_MIN) DistTarget = DIST_TARGET_MIN;
+			printf("Target: %.0f mm\r\n", DistTarget);
+		}
 		if (KeyNum == 2) {
-			Encoder_ResetPosition();
-			Actual = 0;
+			DistTarget += 10.0f;
+			if (DistTarget > DIST_TARGET_MAX) DistTarget = DIST_TARGET_MAX;
+			printf("Target: %.0f mm\r\n", DistTarget);
 		}
 
 		// ======== 6. OLED显示（仅变化时刷新） ========
