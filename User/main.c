@@ -338,6 +338,12 @@ int main(void){
 			DistVelRaw = DistError - DistErrorLast;
 			DistVelFilt = LowPassFilter(DistVelRaw, DistVelFilt, VEL_FILTER_ALPHA);
 
+			// 误差方向反转时清零积分，防止积分饱和阻碍反向响应
+			if (DistError * DistErrorLast < 0)
+			{
+				DistInt = 0;
+			}
+
 			if (fabs(DistError) < DIST_SATURATE)
 			{
 				DistInt += DistError;
